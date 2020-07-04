@@ -7,7 +7,7 @@
 _roadhog-api-doc
 
 # production
-/dist
+
 /.vscode
 
 # misc
@@ -37,5 +37,5 @@ screenshot
 .firebase
 .eslintcache
 
-build
+
 config/assisto-antpro.code-workspace
