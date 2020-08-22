@@ -36,6 +36,13 @@ export default defineConfig({
     dark: true, // active dark theme
     compact: true, // active compact theme
   },
+  proxy: {
+    '/api': {
+      target: 'http://localhost:8080/',
+      changeOrigin: true,
+      pathRewrite: { '^/api': '' },
+    },
+  },
   // umi routes: https://umijs.org/docs/routing
   routes: [
     {

@@ -20,7 +20,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import styles from './style.less';
 
 const FormItem = Form.Item;
-const { Option } = Select;
+const { Option, OptGroup } = Select;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 const normFile = (e) => {
@@ -36,17 +36,18 @@ const normFile = (e) => {
 let index = 0;
 
 const MedicalForm = (props) => {
-  const [problemTags, setProblemTags] = useState([]);
+  const [issueTags, setissueTags] = useState([]);
   const [persons, setPersons] = useState(['Ishan', 'Shweta']);
   const [personName, setPersonName] = useState('');
+  const [issues, setIssues] = useState([]);
 
   useEffect(() => {
-    const apiUrl = 'http://localhost:8080/problems/';
+    const apiUrl = '/api/medical/issues';
     axios.get(apiUrl).then((response) => {
-      console.log(response);
-      setProblemTags(response.data || []);
+      //console.log(response);
+      setissueTags(response.data || []);
     });
-  }, []);
+  }, []); //TO-DO
   const { submitting } = props;
   const [form] = Form.useForm();
   const [showPublicUsers, setShowPublicUsers] = React.useState(false);
@@ -86,8 +87,11 @@ const MedicalForm = (props) => {
 
   const onFinish = (values) => {
     const { dispatch } = props;
+    //console.log('props:');
+   // console.log(props);
+    values.issues = issues;
     dispatch({
-      type: 'formAndbasicForm/submitRegularForm',
+      type: 'medicalForm/submitRegularForm',
       payload: values,
     });
   };
@@ -96,9 +100,40 @@ const MedicalForm = (props) => {
     console.log('Failed:', errorInfo);
   };
 
+  const getTagJson = (tagList) => {
+    var tagJson = [];
+    tagList.map((tag) => {
+      try {
+        JSON.parse(tag);
+      } catch (error) {}
+    });
+  };
+
   const onValuesChange = (changedValues) => {
     const { publicType } = changedValues;
+    
+
     if (publicType) setShowPublicUsers(publicType === '2');
+  };
+
+  //TO_DO : Think of better way to handle tags
+  const handleIssueChange = (event, options) => {
+    let changedIssues = [];
+    options.map((obj) => {
+      let optTag = {};
+      //console.log(obj);
+      if (obj.key === undefined) {
+        optTag = { name: event.slice(-1)[0] };
+       // console.log(event.slice(-1)[0]);
+      } else {
+        optTag = { name: obj.value, _key: obj.key, _id: obj.id };
+        //console.log(obj.key);
+      }
+      changedIssues.push(optTag);
+    });
+    //console.log('changed Issues final');
+    //console.log(changedIssues);
+    setIssues(changedIssues);
   };
 
   const prefixSelector = (
@@ -145,7 +180,12 @@ const MedicalForm = (props) => {
           onValuesChange={onValuesChange}
         >
           <Form.Item>
-            <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
+            <Form.Item
+              name="imageFiles"
+              valuePropName="fileList"
+              getValueFromEvent={normFile}
+              noStyle
+            >
               <Upload.Dragger name="files" action="/upload.do" {...fileprops}>
                 <p className="ant-upload-drag-icon">
                   <InboxOutlined />
@@ -156,7 +196,7 @@ const MedicalForm = (props) => {
             </Form.Item>
           </Form.Item>
           <Form.Item
-            name="problem"
+            name="issues"
             rules={[
               {
                 required: true,
@@ -165,10 +205,21 @@ const MedicalForm = (props) => {
               },
             ]}
           >
-            <Select mode="tags" placeholder="Problems">
-              {problemTags.map((prob) => {
+            <Select
+              mode="tags"
+              id="issues"
+              allowClear={true}
+              placeholder="Medical Issues"
+              onChange={handleIssueChange}
+            >
+              {issueTags.map((prob) => {
                 return (
-                  <option key={prob.id} value={prob.name}>
+                  <option
+                    id={prob._id}
+                    key={prob._key}
+                    value={prob.name}
+                    standard={prob.standard ? 1 : 0}
+                  >
                     {prob.name}
                   </option>
                 );
@@ -197,7 +248,7 @@ const MedicalForm = (props) => {
             <Select mode="tags" placeholder="Doctors"></Select>
           </Form.Item>
           <Form.Item
-            name="department"
+            name="category"
             rules={[
               {
                 type: 'array',
@@ -207,7 +258,7 @@ const MedicalForm = (props) => {
             <Select mode="tags" placeholder="Department"></Select>
           </Form.Item>
           <Form.Item
-            name="treatCenter"
+            name="centerName"
             rules={[
               {
                 type: 'array',
@@ -217,7 +268,7 @@ const MedicalForm = (props) => {
             <Select mode="tags" placeholder="Hospital/Clinic"></Select>
           </Form.Item>
           <Form.Item
-            name="person"
+            name="personName"
             hasFeedback
             rules={[
               {
@@ -248,7 +299,7 @@ const MedicalForm = (props) => {
                         cursor: 'pointer',
                       }}
                       onClick={() => {
-                        console.log('addItem');
+                        //console.log('addItem');
                         setPersons([...persons, personName || `New item ${index++}`]);
                         setPersonName('');
                       }}
@@ -264,11 +315,18 @@ const MedicalForm = (props) => {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item name="date-time-picker">
+          <Form.Item
+            name="dateOfVisit"
+            rules={[
+              {
+                message: 'Please select date and time of visit',
+              },
+            ]}
+          >
             <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" placeholder="When?" />
           </Form.Item>
 
-          <Form.Item name="phone">
+          <Form.Item name="contact">
             <Input style={{ width: '20%' }} placeholder="Phone number" />
           </Form.Item>
           <Form.Item>
@@ -318,5 +376,5 @@ const MedicalForm = (props) => {
 };
 
 export default connect(({ loading }) => ({
-  submitting: loading.effects['formAndbasicForm/submitRegularForm'],
+  submitting: loading.effects['medicalForm/submitRegularForm'],
 }))(MedicalForm);
