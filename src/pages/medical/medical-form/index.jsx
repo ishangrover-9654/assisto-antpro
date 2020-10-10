@@ -1,4 +1,4 @@
-import { PlusOutlined, InboxOutlined } from '@ant-design/icons';
+import { PlusOutlined, InboxOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import {
   Button,
   Card,
@@ -11,7 +11,12 @@ import {
   Upload,
   message,
   InputNumber,
+  Space,
+  Checkbox,
+  Switch,
 } from 'antd';
+import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
+
 import { connect, FormattedMessage, formatMessage } from 'umi';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -88,7 +93,7 @@ const MedicalForm = (props) => {
   const onFinish = (values) => {
     const { dispatch } = props;
     //console.log('props:');
-   // console.log(props);
+    // console.log(props);
     values.issues = issues;
     dispatch({
       type: 'medicalForm/submitRegularForm',
@@ -111,7 +116,6 @@ const MedicalForm = (props) => {
 
   const onValuesChange = (changedValues) => {
     const { publicType } = changedValues;
-    
 
     if (publicType) setShowPublicUsers(publicType === '2');
   };
@@ -124,7 +128,7 @@ const MedicalForm = (props) => {
       //console.log(obj);
       if (obj.key === undefined) {
         optTag = { name: event.slice(-1)[0] };
-       // console.log(event.slice(-1)[0]);
+        // console.log(event.slice(-1)[0]);
       } else {
         optTag = { name: obj.value, _key: obj.key, _id: obj.id };
         //console.log(obj.key);
@@ -227,16 +231,94 @@ const MedicalForm = (props) => {
             </Select>
           </Form.Item>
 
-          <Form.Item
-            name="medicines"
-            rules={[
-              {
-                type: 'array',
-              },
-            ]}
-          >
-            <Select mode="tags" placeholder="Medicines"></Select>
-          </Form.Item>
+          <Form.List name="medicines">
+            {(fields, { add, remove }) => {
+              return (
+                <div>
+                  {fields.map((field) => (
+                    <Space
+                      key={field.key}
+                      style={{ display: 'flex', flexDirection: 'row', marginBottom: 8 }}
+                      size="small"
+                      align="start"
+                    >
+                      <Form.Item
+                        {...field}
+                        name={[field.name, 'medicine']}
+                        fieldKey={[field.fieldKey, 'medicine']}
+                        rules={[{ required: true, message: 'Missing Medicine Name' }]}
+                      >
+                        <Input placeholder="Medicine" />
+                      </Form.Item>
+
+                      <Form.Item
+                        {...field}
+                        name={[field.name, 'breakfast']}
+                        fieldKey={[field.fieldKey, 'breakfast']}
+                      >
+                        <Checkbox value="breakfast">Breakfast</Checkbox>
+                      </Form.Item>
+                      <Form.Item
+                        {...field}
+                        name={[field.name, 'emptyStomach']}
+                        fieldKey={[field.fieldKey, 'emptyStomach']}
+                      >
+                        <Switch
+                          checkedChildren={<CheckOutlined />}
+                          unCheckedChildren={<CloseOutlined />}
+                          size="small"
+                        />
+                      </Form.Item>
+
+                      <Form.Item
+                        {...field}
+                        name={[field.name, 'lunch']}
+                        fieldKey={[field.fieldKey, 'lunch']}
+                      >
+                        <Checkbox value="lunch">Lunch</Checkbox>
+                      </Form.Item>
+                      <Form.Item
+                        {...field}
+                        name={[field.name, 'dinner']}
+                        fieldKey={[field.fieldKey, 'dinner']}
+                      >
+                        <Checkbox value="dinner">Dinner</Checkbox>
+                      </Form.Item>
+                      <Form.Item name="days" {...field} noStyle>
+                        <InputNumber placeholder="Days" />
+                      </Form.Item>
+                      <Form.Item
+                        {...field}
+                        name={[field.name, 'notes']}
+                        fieldKey={[field.fieldKey, 'notes']}
+                      >
+                        <Input placeholder="Note" />
+                      </Form.Item>
+
+                      <MinusCircleOutlined
+                        onClick={() => {
+                          remove(field.name);
+                        }}
+                      />
+                      <Divider />
+                    </Space>
+                  ))}
+
+                  <Form.Item>
+                    <Button
+                      type="dashed"
+                      onClick={() => {
+                        add();
+                      }}
+                      block
+                    >
+                      <PlusOutlined /> Add Medicine
+                    </Button>
+                  </Form.Item>
+                </div>
+              );
+            }}
+          </Form.List>
           <Form.Item
             name="doctors"
             rules={[

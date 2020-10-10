@@ -18,13 +18,13 @@ const LoginMessage = ({ content }) => (
   />
 );
 
-const Login = props => {
+const Login = (props) => {
   const { userAndlogin = {}, submitting } = props;
   const { status, type: loginType } = userAndlogin;
   const [autoLogin, setAutoLogin] = useState(true);
   const [type, setType] = useState('account');
 
-  const handleSubmit = values => {
+  const handleSubmit = (values) => {
     const { dispatch } = props;
     dispatch({
       type: 'userAndlogin/login',
@@ -35,84 +35,87 @@ const Login = props => {
   return (
     <div className={styles.main}>
       <LoginFrom activeKey={type} onTabChange={setType} onSubmit={handleSubmit}>
-        <Tab key="account" tab="账户密码登录">
+        <Tab key="account" tab="Password login">
           {status === 'error' && loginType === 'account' && !submitting && (
-            <LoginMessage content="账户或密码错误（admin/ant.design）" />
+            <LoginMessage content="Incorrect account or password（admin/ant.design）" />
           )}
 
           <UserName
-            name="userName"
-            placeholder="用户名: admin or user"
+            name="email"
+            placeholder="Username"
             rules={[
               {
                 required: true,
-                message: '请输入用户名!',
+                message: 'Please enter user name!',
               },
             ]}
           />
           <Password
             name="password"
-            placeholder="密码: ant.design"
+            placeholder="Password"
             rules={[
               {
                 required: true,
-                message: '请输入密码！',
+                message: 'Please Enter Password！',
               },
             ]}
           />
         </Tab>
-        <Tab key="mobile" tab="手机号登录">
+        <Tab key="mobile" tab="Mobile Login">
           {status === 'error' && loginType === 'mobile' && !submitting && (
-            <LoginMessage content="验证码错误" />
+            <LoginMessage
+              content="Verification code error
+            "
+            />
           )}
           <Mobile
             name="mobile"
-            placeholder="手机号"
+            placeholder="Phone number"
             rules={[
               {
                 required: true,
-                message: '请输入手机号！',
+                message: 'Please enter phone number！',
               },
               {
                 pattern: /^1\d{10}$/,
-                message: '手机号格式错误！',
+                message: 'Malformed phone number!',
               },
             ]}
           />
           <Captcha
             name="captcha"
-            placeholder="验证码"
+            placeholder="Verification code"
             countDown={120}
             getCaptchaButtonText=""
-            getCaptchaSecondText="秒"
+            getCaptchaSecondText="Second"
             rules={[
               {
                 required: true,
-                message: '请输入验证码！',
+                message: 'please enter verification code！',
               },
             ]}
           />
         </Tab>
         <div>
-          <Checkbox checked={autoLogin} onChange={e => setAutoLogin(e.target.checked)}>
-            自动登录
+          <Checkbox checked={autoLogin} onChange={(e) => setAutoLogin(e.target.checked)}>
+            Remember Me
           </Checkbox>
           <a
             style={{
               float: 'right',
             }}
           >
-            忘记密码
+            Forgot Password
           </a>
         </div>
-        <Submit loading={submitting}>登录</Submit>
+        <Submit loading={submitting}>Log In</Submit>
         <div className={styles.other}>
-          其他登录方式
+          Other Login Methods
           <AlipayCircleOutlined className={styles.icon} />
           <TaobaoCircleOutlined className={styles.icon} />
           <WeiboCircleOutlined className={styles.icon} />
           <Link className={styles.register} to="/user/register">
-            注册账户
+            Or Register Me
           </Link>
         </div>
       </LoginFrom>

@@ -33,7 +33,7 @@ export default defineConfig({
     ie: 11,
   },
   antd: {
-    dark: true, // active dark theme
+    dark: false, // active dark theme
     compact: true, // active compact theme
   },
   proxy: {

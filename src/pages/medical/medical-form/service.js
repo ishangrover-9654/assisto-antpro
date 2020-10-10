@@ -4,7 +4,6 @@ export async function submitMedicalForm(params) {
   console.log('params.imag', params.imageFiles);
   let formData = new FormData();
   const files = params.imageFiles;
-  debugger;
   files.map((file, index) => {
     formData.append('files', file.originFileObj);
   });

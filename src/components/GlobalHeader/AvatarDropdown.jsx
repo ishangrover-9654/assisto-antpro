@@ -6,7 +6,7 @@ import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 
 class AvatarDropdown extends React.Component {
-  onMenuClick = event => {
+  onMenuClick = (event) => {
     const { key } = event;
 
     if (key === 'logout') {
@@ -37,20 +37,20 @@ class AvatarDropdown extends React.Component {
         {menu && (
           <Menu.Item key="center">
             <UserOutlined />
-            个人中心
+            Personal center
           </Menu.Item>
         )}
         {menu && (
           <Menu.Item key="settings">
             <SettingOutlined />
-            个人设置
+            Personal Settings
           </Menu.Item>
         )}
         {menu && <Menu.Divider />}
 
         <Menu.Item key="logout">
           <LogoutOutlined />
-          退出登录
+          Log Out
         </Menu.Item>
       </Menu>
     );

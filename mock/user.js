@@ -5,42 +5,42 @@ function getFakeCaptcha(req, res) {
 export default {
   // 支持值为 Object 和 Array
   'GET /api/currentUser': {
-    name: 'Serati Ma',
+    name: 'Dummy-User',
     avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
     userid: '00000001',
-    email: 'antdesign@alipay.com',
-    signature: '海纳百川，有容乃大',
-    title: '交互专家',
-    group: '蚂蚁金服－某某某事业群－某某平台部－某某技术部－UED',
+    email: 'dummyEmail@gmail.com',
+    signature: 'Be tolerant to diversity, tolerance is a virtue',
+    title: 'Head of Family',
+    group: 'Grover Family',
     tags: [
       {
         key: '0',
-        label: '很有想法的',
+        label: 'Very thoughtful',
       },
       {
         key: '1',
-        label: '专注设计',
+        label: 'Focus on design ',
       },
       {
         key: '2',
-        label: '辣~',
+        label: 'Cool~',
       },
       {
         key: '3',
-        label: '大长腿',
+        label: 'BlackEyes',
       },
       {
         key: '4',
-        label: '川妹子',
+        label: 'Fname Lname',
       },
       {
         key: '5',
-        label: '海纳百川',
+        label: 'Inclusive of all rivers',
       },
     ],
     notifyCount: 12,
     unreadCount: 11,
-    country: 'China',
+    country: 'India',
     geographic: {
       province: {
         label: '浙江省',
@@ -78,7 +78,7 @@ export default {
   'POST /api/login/account': (req, res) => {
     const { password, userName, type } = req.body;
 
-    if (password === 'ant.design' && userName === 'admin') {
+    if (password === 'admin' && userName === 'admin') {
       res.send({
         status: 'ok',
         type,
@@ -87,7 +87,7 @@ export default {
       return;
     }
 
-    if (password === 'ant.design' && userName === 'user') {
+    if (password === '123456' && userName === 'dummy') {
       res.send({
         status: 'ok',
         type,

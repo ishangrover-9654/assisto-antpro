@@ -16,8 +16,9 @@ const Model = {
         payload: response,
       }); // Login successfully
 
-      if (response.status === 'ok') {
-        message.success('登录成功！');
+      console.log('Response', response);
+      if (response.status === 'SUCCESS') {
+        message.success('Hi There..Welome！');
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params;
@@ -38,6 +39,8 @@ const Model = {
         }
 
         history.replace(redirect || '/');
+      } else {
+        message.error('Oops! Incorrect Credentials..');
       }
     },
 

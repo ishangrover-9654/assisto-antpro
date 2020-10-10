@@ -1,6 +1,6 @@
 export default {
   navTheme: 'dark',
-  primaryColor: '#e87040',
+  primaryColor: '#1890FF',
   layout: 'sidemenu',
   contentWidth: 'Fluid',
   fixedHeader: false,
@@ -10,7 +10,7 @@ export default {
   menu: {
     locale: true,
   },
-  title: 'Be-Org',
+  title: 'Tag-Me',
   pwa: false,
   iconfontUrl: '',
 };

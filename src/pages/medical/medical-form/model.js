@@ -7,7 +7,7 @@ const Model = {
   effects: {
     *submitRegularForm({ payload }, { call }) {
       //console.log('payload issue:');
-      //console.log(payload.issues);
+      console.log('payload', payload);
       /*const categories = [];
       payload.issues.forEach((value) => {
         //const item = { name: value };
